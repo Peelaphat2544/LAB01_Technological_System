@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LAB01 - ใบงานเรื่อง ระบบทางเทคโนโลยี (Technological System)</title>
+  <!-- Google Fonts: Sarabun & Prompt -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Top Interactive Control Bar (Hidden when printing / exporting PDF) -->
+  <header class="app-toolbar no-print">
+    <div class="toolbar-inner">
+      <div class="toolbar-brand">
+        <span class="brand-badge">LAB 01</span>
+        <div class="brand-text">
+          <h1>ระบบทางเทคโนโลยี (Technological System)</h1>
+          <p>รายวิชาออกแบบและวิทยาการคำนวณ 2 ชั้นมัธยมศึกษาปีที่ 1 (ขนาดกระดาษ A4 มาตรฐาน)</p>
+        </div>
+      </div>
+
+      <div class="toolbar-progress" title="ความคืบหน้าการทำใบงานและสถานะการบันทึกฉบับร่าง">
+        <div class="progress-label">
+          <span>ความคืบหน้า</span>
+          <strong id="progressText">0 / 10 ข้อ</strong>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="draft-status" id="draftStatus">
+          <span class="draft-dot"></span>
+          <span id="draftStatusText">ระบบบันทึกฉบับร่างอัตโนมัติพร้อมทำงาน</span>
+        </div>
+      </div>
+
+      <div class="toolbar-actions">
+        <button type="button" id="btnSaveDraft" class="btn btn-outline" title="บันทึกข้อมูลฉบับร่างลงในเบราว์เซอร์ป้องกันข้อมูลสูญหาย">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          <span>บันทึกฉบับร่าง</span>
+        </button>
+
+        <button type="button" id="btnCheck" class="btn btn-outline" title="ตรวจคำตอบและคำนวณคะแนน">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+          <span id="btnCheckLabel">ตรวจคำตอบ</span>
+        </button>
+
+        <div class="teacher-dropdown-wrap">
+          <button type="button" id="btnTeacherMenu" class="btn btn-outline" title="เครื่องมือสำหรับครูผู้สอน">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            <span>สำหรับครู</span>
+          </button>
+          <div id="teacherPanel" class="teacher-popover hidden">
+            <div class="popover-title">โหมดครูผู้สอน</div>
+            <label class="toggle-row">
+              <input type="checkbox" id="chkFillKey" />
+              <span>เติมคำตอบเฉลยลงในช่องว่าง</span>
+            </label>
+            <label class="toggle-row">
+              <input type="checkbox" id="chkShowKeySheet" />
+              <span>แนบแผ่นเฉลยท้ายใบงาน (หน้า 4)</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="button" id="btnReset" class="btn btn-ghost" title="ล้างข้อมูลทั้งหมดเป็นใบงานเปล่า">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          <span>ล้างคำตอบ</span>
+        </button>
+
+        <button type="button" id="btnPrint" class="btn btn-secondary" title="สั่งพิมพ์หรือบันทึกเป็น PDF ผ่านเบราว์เซอร์">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+          <span>พิมพ์</span>
+        </button>
+
+        <button type="button" id="btnExportPdf" class="btn btn-primary" title="ดาวน์โหลดใบงานเป็นไฟล์ PDF ขนาด A4">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+          <span id="btnExportLabel">Export PDF</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Quick Helper Tip Banner (Screen Only) -->
+  <div class="helper-banner no-print">
+    <span><strong>วิธีทำใบงาน:</strong> เลือกตัวอักษร <code>ก, ข, ค, ง</code> จากช่องตัวเลือกซ้ายมือ หรือ <strong>คลิกที่ข้อความตัวเลือกด้านขวามือ</strong> เพื่อเติมคำตอบลงในช่องว่างตามลำดับ แล้วกดปุ่ม <strong>Export PDF</strong> เพื่อบันทึกไฟล์ขนาด A4 ส่งครู</span>
+  </div>
+
+  <!-- Main Document Workspace (Exact A4 Sheets: 210mm x 297mm) -->
+  <main id="worksheetDocument" class="document-workspace">
+    <!-- ==================== PAGE 1 (ข้อ 1 - 3) ==================== -->
+    <section class="a4-sheet" id="page1">
+      <!-- Worksheet Header -->
+      <div class="ws-header">
+        <div class="ws-header-left">
+          <div class="ws-code-tag">
+            <span class="code-main">LAB 01</span>
+            <span class="code-sub">ชั้น ม.1</span>
+          </div>
+          <div class="ws-title-group">
+            <div class="ws-course">รายวิชา ออกแบบและวิทยาการคำนวณ 2 (กลุ่มสาระการเรียนรู้วิทยาศาสตร์และเทคโนโลยี)</div>
+            <h2 class="ws-title">ใบงานที่ 1 เรื่อง ระบบทางเทคโนโลยี (Technological System)</h2>
+          </div>
+        </div>
+        <div class="ws-score-box" id="scoreBox">
+          <div class="score-title">คะแนนที่ได้</div>
+          <div class="score-value"><span id="scoreDisplay">......</span> / 10</div>
+        </div>
+      </div>
+
+      <!-- Student Information Row -->
+      <div class="ws-student-bar">
+        <div class="student-field field-name">
+          <label for="studentName">ชื่อ-นามสกุล:</label>
+          <input type="text" id="studentName" placeholder="พิมพ์ชื่อ-นามสกุล..." autocomplete="off" />
+        </div>
+        <div class="student-field field-room">
+          <label for="studentRoom">ชั้น: ม.1/</label>
+          <input type="text" id="studentRoom" placeholder="...." maxlength="4" autocomplete="off" />
+        </div>
+        <div class="student-field field-number">
+          <label for="studentNo">เลขที่:</label>
+          <input type="text" id="studentNo" placeholder="...." maxlength="4" autocomplete="off" />
+        </div>
+      </div>
+
+      <!-- Instructions & System Flow Concept Diagram -->
+      <div class="ws-instruction-box">
+        <p class="instruction-text">
+          <strong>คำชี้แจง:</strong> ให้นักเรียนพิจารณาระบบการทำงานของเทคโนโลยีที่กำหนดให้ แล้วนำตัวอักษร (<strong>ก, ข, ค, ง</strong>) หน้าข้อความด้านขวามือ มาเติมลงในช่องว่างของระบบทางเทคโนโลยีให้ถูกต้องและสัมพันธ์กัน
+        </p>
+        <div class="system-diagram-bar" aria-hidden="true">
+          <div class="sys-node node-input">ตัวป้อน (Input)</div>
+          <div class="sys-arrow">➜</div>
+          <div class="sys-node node-process">กระบวนการ (Process)</div>
+          <div class="sys-arrow">➜</div>
+          <div class="sys-node node-output">ผลผลิต (Output)</div>
+          <div class="sys-feedback-pill">↩ ข้อมูลย้อนกลับ (Feedback) <span>(ควบคุมการทำงานในบางระบบ)</span></div>
+        </div>
+      </div>
+
+      <!-- Questions 1 - 3 Container -->
+      <div class="questions-list" id="questionsPage1"></div>
+
+      <!-- Page Footer -->
+      <footer class="ws-footer">
+        <span>ใบงาน LAB01 : เรื่อง ระบบทางเทคโนโลยี (Technological System)</span>
+        <span class="page-num" data-page="1">หน้า 1 / 3</span>
+      </footer>
+    </section>
+
+    <!-- ==================== PAGE 2 (ข้อ 4 - 7) ==================== -->
+    <section class="a4-sheet" id="page2">
+      <div class="ws-running-header">
+        <div class="running-left">
+          <span class="mini-badge">LAB 01</span>
+          <span>เรื่อง ระบบทางเทคโนโลยี (Technological System) — <em>ข้อที่ 4 ถึง ข้อที่ 7</em></span>
+        </div>
+        <div class="running-right running-student-info"></div>
+      </div>
+
+      <!-- Questions 4 - 7 Container -->
+      <div class="questions-list" id="questionsPage2"></div>
+
+      <footer class="ws-footer">
+        <span>ใบงาน LAB01 : เรื่อง ระบบทางเทคโนโลยี (Technological System)</span>
+        <span class="page-num" data-page="2">หน้า 2 / 3</span>
+      </footer>
+    </section>
+
+    <!-- ==================== PAGE 3 (ข้อ 8 - 10) ==================== -->
+    <section class="a4-sheet" id="page3">
+      <div class="ws-running-header">
+        <div class="running-left">
+          <span class="mini-badge">LAB 01</span>
+          <span>เรื่อง ระบบทางเทคโนโลยี (Technological System) — <em>ข้อที่ 8 ถึง ข้อที่ 10</em></span>
+        </div>
+        <div class="running-right running-student-info"></div>
+      </div>
+
+      <!-- Questions 8 - 10 Container -->
+      <div class="questions-list" id="questionsPage3"></div>
+
+      <footer class="ws-footer">
+        <span>ใบงาน LAB01 : เรื่อง ระบบทางเทคโนโลยี (Technological System)</span>
+        <span class="page-num" data-page="3">หน้า 3 / 3</span>
+      </footer>
+    </section>
+
+    <!-- ==================== PAGE 4: TEACHER ANSWER KEY (Optional) ==================== -->
+    <section class="a4-sheet hidden" id="pageAnswerKey">
+      <div class="ws-header key-header">
+        <div class="ws-header-left">
+          <div class="ws-code-tag key-tag">
+            <span class="code-main">เฉลย</span>
+            <span class="code-sub">LAB 01</span>
+          </div>
+          <div class="ws-title-group">
+            <div class="ws-course">ส่วนสำหรับครูผู้สอน (Teacher Answer Key)</div>
+            <h2 class="ws-title">เฉลยใบงานที่ 1 เรื่อง ระบบทางเทคโนโลยี (Technological System)</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="answer-key-grid" id="answerKeyContainer"></div>
+
+      <footer class="ws-footer">
+        <span>ส่วนสำหรับครูผู้สอน — เฉลยใบงาน LAB01 : ระบบทางเทคโนโลยี</span>
+        <span class="page-num" data-page="4">หน้า 4 / 4</span>
+      </footer>
+    </section>
+  </main>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden no-print" role="status" aria-live="polite"></div>
+
+  <!-- Libraries for Direct Client-Side PDF Export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

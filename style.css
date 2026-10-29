@@ -1,0 +1,1163 @@
+/* ==========================================================================
+   LAB01 Worksheet - ระบบทางเทคโนโลยี (Technological System)
+   Exact A4 Paper Dimensions (210mm x 297mm) + Large Readable Thai Typography
+   ========================================================================== */
+
+:root {
+  --a4-width: 210mm;
+  --a4-height: 297mm;
+
+  --bg-canvas: #e2e8f0;
+  --surface: #ffffff;
+  --ink: #0f172a;
+  --ink-secondary: #1e293b;
+  --ink-muted: #475569;
+  --border: #cbd5e1;
+  --border-light: #e2e8f0;
+
+  --primary: #1d4ed8;
+  --primary-dark: #1e3a8a;
+  --primary-soft: #eff6ff;
+
+  /* Technological System Semantic Colors */
+  --input-bg: #eff6ff;
+  --input-border: #93c5fd;
+  --input-text: #1e40af;
+
+  --process-bg: #fffbeb;
+  --process-border: #fcd34d;
+  --process-text: #92400e;
+
+  --output-bg: #ecfdf5;
+  --output-border: #6ee7b7;
+  --output-text: #065f46;
+
+  --feedback-bg: #f5f3ff;
+  --feedback-border: #c4b5fd;
+  --feedback-text: #5b21b6;
+
+  --correct: #15803d;
+  --correct-bg: #dcfce7;
+  --wrong: #b91c1c;
+  --wrong-bg: #fee2e2;
+  --warn: #b45309;
+  --warn-bg: #fef3c7;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--bg-canvas);
+  color: var(--ink);
+  font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ==========================================================================
+   Top Control Toolbar (Screen Only)
+   ========================================================================== */
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.07);
+}
+
+.toolbar-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.toolbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-badge {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: #fff;
+  font-family: 'Prompt', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.brand-text h1 {
+  font-family: 'Prompt', sans-serif;
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.25;
+}
+
+.brand-text p {
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+
+.toolbar-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 160px;
+}
+
+.progress-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--ink-secondary);
+}
+
+.progress-track {
+  height: 8px;
+  background: var(--border-light);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #2563eb, #10b981);
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
+
+.draft-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: var(--ink-muted);
+  margin-top: 1px;
+}
+
+.draft-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #94a3b8;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.draft-status.is-saved {
+  color: var(--correct);
+  font-weight: 500;
+}
+
+.draft-status.is-saved .draft-dot {
+  background-color: #10b981;
+}
+
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(29, 78, 216, 0.28);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+.btn-secondary {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #1e293b;
+}
+
+.btn-outline {
+  background: #ffffff;
+  color: var(--ink-secondary);
+  border-color: var(--border);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: var(--ink);
+}
+
+.btn-outline.active {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary-dark);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-muted);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: #fee2e2;
+  color: var(--wrong);
+}
+
+/* Teacher Popover */
+.teacher-dropdown-wrap {
+  position: relative;
+}
+
+.teacher-popover {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  width: 280px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
+  z-index: 150;
+}
+
+.popover-title {
+  font-family: 'Prompt', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--ink-secondary);
+  padding: 5px 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.toggle-row input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+/* Helper Banner */
+.helper-banner {
+  width: var(--a4-width);
+  max-width: calc(100% - 24px);
+  margin: 14px auto 0;
+  padding: 10px 16px;
+  background: #ffffff;
+  border: 1px solid #bfdbfe;
+  border-left: 4px solid var(--primary);
+  border-radius: 8px;
+  font-size: 14.5px;
+  color: var(--ink-secondary);
+}
+
+.helper-banner code {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   Exact A4 Sheet Document Workspace (210mm x 297mm)
+   ========================================================================== */
+.document-workspace {
+  padding: 18px 12px 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+/* Strictly 210mm x 297mm physical A4 proportion */
+.a4-sheet {
+  width: var(--a4-width);
+  height: var(--a4-height);
+  min-height: var(--a4-height);
+  max-height: var(--a4-height);
+  background: #ffffff;
+  padding: 11mm 13mm 10mm;
+  border-radius: 2px;
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.12), 0 1px 4px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  letter-spacing: 0; /* Critical for Thai vowel accuracy in html2canvas */
+}
+
+/* Worksheet Header */
+.ws-header {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  border-bottom: 2.5px solid var(--primary-dark);
+}
+
+.ws-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.ws-code-tag {
+  background: var(--primary-dark);
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 6px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 74px;
+  text-align: center;
+}
+
+.ws-code-tag .code-main {
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.ws-code-tag .code-sub {
+  font-size: 12.5px;
+  opacity: 0.92;
+  line-height: 1.2;
+}
+
+.ws-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ws-course {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.ws-title {
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+.ws-score-box {
+  border: 2px solid var(--primary-dark);
+  border-radius: 8px;
+  min-width: 106px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 12px;
+  background: #f8fafc;
+}
+
+.ws-score-box .score-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--ink-secondary);
+}
+
+.ws-score-box .score-value {
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  font-size: 17.5px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  line-height: 1.2;
+}
+
+/* Student Info Row */
+.ws-student-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #f8fafc;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin-bottom: 10px;
+}
+
+.student-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+}
+
+.student-field label {
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.student-field input {
+  border: none;
+  border-bottom: 1.5px dotted #475569;
+  background: transparent;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  padding: 2px 6px;
+  outline: none;
+  height: 28px;
+}
+
+.student-field input:focus {
+  border-bottom-style: solid;
+  border-bottom-color: var(--primary);
+  background: #eff6ff;
+}
+
+.field-name {
+  flex: 1;
+}
+
+.field-name input {
+  width: 100%;
+}
+
+.field-room input,
+.field-number input {
+  width: 58px;
+  text-align: center;
+}
+
+/* Instructions & Diagram Box */
+.ws-instruction-box {
+  background: #fcfdff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 9px 14px;
+  margin-bottom: 12px;
+}
+
+.instruction-text {
+  font-size: 15.5px;
+  color: var(--ink);
+  line-height: 1.48;
+  margin-bottom: 8px;
+}
+
+.system-diagram-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 7px;
+  border-top: 1px dashed var(--border);
+}
+
+.sys-node {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 5px;
+  border: 1px solid;
+}
+
+.node-input {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--input-text);
+}
+
+.node-process {
+  background: var(--process-bg);
+  border-color: var(--process-border);
+  color: var(--process-text);
+}
+
+.node-output {
+  background: var(--output-bg);
+  border-color: var(--output-border);
+  color: var(--output-text);
+}
+
+.sys-arrow {
+  font-size: 14px;
+  color: var(--ink-muted);
+  font-weight: 700;
+}
+
+.sys-feedback-pill {
+  font-size: 13px;
+  font-weight: 700;
+  background: var(--feedback-bg);
+  border: 1px dashed var(--feedback-border);
+  color: var(--feedback-text);
+  padding: 3px 10px;
+  border-radius: 5px;
+}
+
+.sys-feedback-pill span {
+  font-weight: 500;
+  font-size: 12.5px;
+}
+
+/* Page 2 & Page 3 Running Header */
+.ws-running-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+  font-size: 14.5px;
+  color: var(--ink-secondary);
+}
+
+.running-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.mini-badge {
+  background: var(--primary-dark);
+  color: #fff;
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 5px;
+}
+
+.running-right {
+  font-size: 14px;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Question Cards (Items 1 - 10) - Large Readable Font
+   ========================================================================== */
+.questions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  flex: 1;
+}
+
+.question-card {
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  background: #ffffff;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.q-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f1f5f9;
+  padding: 6px 12px;
+  border-radius: 7.5px 7.5px 0 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.q-title-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.q-num-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-dark);
+  color: #ffffff;
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  min-width: 25px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 5px;
+}
+
+.q-title {
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  font-size: 16.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.q-note {
+  font-size: 13.5px;
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
+.q-status-badge {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 99px;
+}
+
+.q-status-badge.status-perfect {
+  background: var(--correct-bg);
+  color: var(--correct);
+}
+
+.q-status-badge.status-partial {
+  background: var(--wrong-bg);
+  color: var(--wrong);
+}
+
+.q-status-badge.status-dup {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+/* 2-Column Body inside Question Card */
+.q-card-body {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 12px;
+  padding: 9px 12px;
+  align-items: center;
+}
+
+/* Left Column: Technological System Slots */
+.q-slots-col {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-right: 12px;
+  border-right: 1.5px dashed var(--border);
+}
+
+.slot-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 2.5px 6px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  transition: background 0.12s ease, border-color 0.12s ease;
+  cursor: pointer;
+}
+
+.slot-row.active-target {
+  background: #eff6ff;
+  border-color: #60a5fa;
+}
+
+.slot-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink-secondary);
+}
+
+.slot-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.slot-input .slot-dot { background: #2563eb; }
+.slot-process .slot-dot { background: #d97706; }
+.slot-output .slot-dot { background: #059669; }
+.slot-feedback .slot-dot { background: #7c3aed; }
+
+.slot-control-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.slot-select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 66px;
+  height: 27px;
+  border: 1.5px solid #64748b;
+  border-radius: 6px;
+  background-color: #ffffff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  padding: 0 18px 0 6px;
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+  outline: none;
+}
+
+.slot-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.slot-select.empty-val {
+  color: #94a3b8;
+  font-weight: 500;
+  border-style: dashed;
+}
+
+.slot-select.dup-val {
+  border-color: #d97706;
+  background-color: var(--warn-bg);
+  color: var(--warn);
+}
+
+.slot-select.is-correct {
+  border-color: var(--correct);
+  background-color: var(--correct-bg);
+  color: var(--correct);
+}
+
+.slot-select.is-wrong {
+  border-color: var(--wrong);
+  background-color: var(--wrong-bg);
+  color: var(--wrong);
+}
+
+.slot-mark {
+  font-size: 14px;
+  font-weight: 700;
+  width: 15px;
+  text-align: center;
+}
+
+.slot-mark.mark-ok { color: var(--correct); }
+.slot-mark.mark-err { color: var(--wrong); }
+
+/* Right Column: Choices (ก, ข, ค, ง) */
+.q-choices-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4.5px;
+}
+
+.choice-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 15.2px;
+  line-height: 1.42;
+  color: var(--ink);
+  padding: 3px 6px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+  user-select: none;
+}
+
+.choice-item:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.choice-item.choice-used {
+  background: #f8fafc;
+  color: #475569;
+}
+
+.choice-item.choice-used .choice-key {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+.choice-key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 27px;
+  height: 22px;
+  padding: 0 5px;
+  border: 1.5px solid #64748b;
+  border-radius: 5px;
+  background: #ffffff;
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink-secondary);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.choice-text {
+  flex: 1;
+}
+
+/* ==========================================================================
+   Page 4: Teacher Answer Key Sheet
+   ========================================================================== */
+.key-header {
+  border-bottom-color: #047857;
+}
+
+.ws-code-tag.key-tag {
+  background: #047857;
+}
+
+.answer-key-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 6px;
+  flex: 1;
+  align-content: start;
+}
+
+.key-card {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  background: #fcfdfd;
+}
+
+.key-card-title {
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.key-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14.5px;
+}
+
+.key-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.key-list li:nth-child(odd) {
+  background: #f8fafc;
+}
+
+.key-ans-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  min-width: 32px;
+  height: 23px;
+  border-radius: 5px;
+}
+
+/* Worksheet Footer */
+.ws-footer {
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: var(--ink-muted);
+}
+
+/* ==========================================================================
+   Static Spans Used During Offscreen PDF Rendering (Prevents Input Clipping)
+   ========================================================================== */
+.pdf-export-stage {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: var(--a4-width);
+  background: #ffffff;
+  z-index: -1;
+}
+
+.pdf-export-stage .a4-sheet {
+  width: var(--a4-width) !important;
+  height: var(--a4-height) !important;
+  min-height: var(--a4-height) !important;
+  max-height: var(--a4-height) !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+}
+
+.pdf-export-stage .slot-row.active-target {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+
+.pdf-field-span {
+  display: inline-flex;
+  align-items: center;
+  border-bottom: 1.5px dotted #475569;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--primary-dark);
+  padding: 0 6px 2px;
+  min-height: 27px;
+  line-height: 1.4;
+}
+
+.field-name .pdf-field-span {
+  width: 100%;
+}
+
+.field-room .pdf-field-span,
+.field-number .pdf-field-span {
+  width: 58px;
+  justify-content: center;
+}
+
+.pdf-slot-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 26px;
+  border: 1.5px solid #475569;
+  border-radius: 6px;
+  font-family: 'Prompt', 'Sarabun', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  background: #ffffff;
+  line-height: 1.25;
+}
+
+.pdf-slot-box.is-empty {
+  border-style: dashed;
+  border-color: #94a3b8;
+  color: #94a3b8;
+  font-weight: 500;
+  font-size: 13.5px;
+}
+
+.pdf-slot-box.is-correct {
+  border-color: var(--correct);
+  background: var(--correct-bg);
+  color: var(--correct);
+}
+
+.pdf-slot-box.is-wrong {
+  border-color: var(--wrong);
+  background: var(--wrong-bg);
+  color: var(--wrong);
+}
+
+/* Toast Notification */
+.toast {
+  position: fixed;
+  bottom: 22px;
+  right: 22px;
+  background: #0f172a;
+  color: #ffffff;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 14.5px;
+  font-weight: 500;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.25);
+  z-index: 300;
+  max-width: 380px;
+}
+
+/* ==========================================================================
+   Responsive Design for Small Screens (< 210mm viewport)
+   ========================================================================== */
+@media screen and (max-width: 840px) {
+  .a4-sheet {
+    width: 100%;
+    max-width: var(--a4-width);
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    padding: 20px 16px;
+  }
+
+  .ws-header {
+    flex-direction: column;
+  }
+
+  .ws-score-box {
+    align-self: flex-end;
+    flex-direction: row;
+    gap: 8px;
+    padding: 4px 12px;
+  }
+
+  .ws-student-bar {
+    flex-wrap: wrap;
+  }
+
+  .field-name {
+    flex-basis: 100%;
+  }
+
+  .q-card-body {
+    grid-template-columns: 1fr;
+  }
+
+  .q-slots-col {
+    padding-right: 0;
+    padding-bottom: 8px;
+    border-right: none;
+    border-bottom: 1.5px dashed var(--border);
+  }
+
+  .answer-key-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   Native Browser Print (@media print) - Exact Vector A4
+   ========================================================================== */
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  html, body {
+    width: 210mm !important;
+    background: #ffffff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .document-workspace {
+    padding: 0 !important;
+    gap: 0 !important;
+    display: block !important;
+  }
+
+  .a4-sheet {
+    width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+    padding: 11mm 13mm 10mm !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    page-break-after: always;
+    break-after: page;
+    overflow: hidden !important;
+  }
+
+  .a4-sheet:last-of-type {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  .slot-row.active-target {
+    background: transparent !important;
+    border-color: transparent !important;
+  }
+
+  .slot-select {
+    background-image: none !important;
+    padding: 0 4px !important;
+  }
+
+  .student-field input::placeholder {
+    color: transparent !important;
+  }
+}
