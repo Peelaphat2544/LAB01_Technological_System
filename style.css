@@ -247,52 +247,6 @@ html, body {
   color: var(--wrong);
 }
 
-/* Teacher Popover */
-.teacher-dropdown-wrap {
-  position: relative;
-}
-
-.teacher-popover {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 8px);
-  width: 280px;
-  background: #ffffff;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 12px 14px;
-  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
-  z-index: 150;
-}
-
-.popover-title {
-  font-family: 'Prompt', sans-serif;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--primary-dark);
-  margin-bottom: 8px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--border-light);
-}
-
-.toggle-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: var(--ink-secondary);
-  padding: 5px 0;
-  cursor: pointer;
-  user-select: none;
-}
-
-.toggle-row input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  accent-color: var(--primary);
-  cursor: pointer;
-}
-
 /* Helper Banner */
 .helper-banner {
   width: var(--a4-width);
@@ -864,78 +818,6 @@ html, body {
 
 .choice-text {
   flex: 1;
-}
-
-/* ==========================================================================
-   Page 4: Teacher Answer Key Sheet
-   ========================================================================== */
-.key-header {
-  border-bottom-color: #047857;
-}
-
-.ws-code-tag.key-tag {
-  background: #047857;
-}
-
-.answer-key-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 6px;
-  flex: 1;
-  align-content: start;
-}
-
-.key-card {
-  border: 1.5px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 14px;
-  background: #fcfdfd;
-}
-
-.key-card-title {
-  font-family: 'Prompt', 'Sarabun', sans-serif;
-  font-size: 15.5px;
-  font-weight: 700;
-  color: var(--ink);
-  margin-bottom: 6px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid var(--border-light);
-}
-
-.key-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 14.5px;
-}
-
-.key-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-.key-list li:nth-child(odd) {
-  background: #f8fafc;
-}
-
-.key-ans-pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: #dcfce7;
-  color: #166534;
-  border: 1px solid #86efac;
-  font-family: 'Prompt', 'Sarabun', sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  min-width: 32px;
-  height: 23px;
-  border-radius: 5px;
 }
 
 /* Worksheet Footer */

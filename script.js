@@ -158,7 +158,6 @@ let state = {
   lastSavedAt: null
 };
 
-let savedStudentAnswersBackup = null;
 let toastTimer = null;
 
 const IDB_NAME = 'lab01_worksheet_db';
@@ -303,8 +302,6 @@ function loadState() {
 
 function saveState() {
   try {
-    if (document.getElementById('chkFillKey')?.checked) return;
-
     // Ensure latest DOM input values are captured
     const nameEl = document.getElementById('studentName');
     const roomEl = document.getElementById('studentRoom');
@@ -386,17 +383,15 @@ function createQuestionCard(q) {
   return card;
 }
 
-// Render All Questions across 3 A4 Pages & Answer Key on Page 4
+// Render All Questions across 3 A4 Pages
 function renderWorksheet() {
   const p1Container = document.getElementById('questionsPage1');
   const p2Container = document.getElementById('questionsPage2');
   const p3Container = document.getElementById('questionsPage3');
-  const keyContainer = document.getElementById('answerKeyContainer');
 
   p1Container.innerHTML = '';
   p2Container.innerHTML = '';
   p3Container.innerHTML = '';
-  keyContainer.innerHTML = '';
 
   QUESTIONS.forEach((q) => {
     const card = createQuestionCard(q);
@@ -407,24 +402,6 @@ function renderWorksheet() {
     } else {
       p3Container.appendChild(card);
     }
-
-    // Build Teacher Answer Key Card (Page 4)
-    const keyCard = document.createElement('div');
-    keyCard.className = 'key-card';
-    keyCard.innerHTML = `
-      <div class="key-card-title">${q.id}. ${q.title}</div>
-      <ul class="key-list">
-        ${SYSTEM_SLOTS.map(
-          (s) => `
-            <li>
-              <span>${s.label}</span>
-              <span class="key-ans-pill">${q.answer[s.key]}</span>
-            </li>
-          `
-        ).join('')}
-      </ul>
-    `;
-    keyContainer.appendChild(keyCard);
   });
 
   // Sync student inputs
@@ -571,10 +548,9 @@ function showToast(message, duration = 3000) {
   }, duration);
 }
 
-// Update Page Numbers in Footers (3 pages vs 4 pages with Teacher Key)
+// Update Page Numbers in Footers (3 A4 Pages)
 function syncPageNumbers() {
-  const showKey = !document.getElementById('pageAnswerKey').classList.contains('hidden');
-  const totalPages = showKey ? 4 : 3;
+  const totalPages = 3;
   document.querySelectorAll('.page-num').forEach((el) => {
     const p = el.dataset.page;
     el.textContent = `หน้า ${p} / ${totalPages}`;
@@ -587,12 +563,6 @@ function sanitizeFilenamePart(str) {
 }
 
 function buildPdfFilename() {
-  const isKeyFilled = document.getElementById('chkFillKey')?.checked;
-  const isKeySheetShown = document.getElementById('chkShowKeySheet')?.checked;
-  if (isKeyFilled || isKeySheetShown) {
-    return 'เฉลย_LAB01_ระบบทางเทคโนโลยี_ม.1.pdf';
-  }
-
   const rawNo = document.getElementById('studentNo')?.value ?? state.studentNo;
   const rawName = document.getElementById('studentName')?.value ?? state.studentName;
 
@@ -827,53 +797,6 @@ function bindEvents() {
     showToast(`ตรวจคำตอบเรียบร้อย! คะแนนที่ได้: ${scoreText} / 10 คะแนน`);
   });
 
-  const btnTeacherMenu = document.getElementById('btnTeacherMenu');
-  const teacherPanel = document.getElementById('teacherPanel');
-
-  btnTeacherMenu.addEventListener('click', (e) => {
-    e.stopPropagation();
-    teacherPanel.classList.toggle('hidden');
-    btnTeacherMenu.classList.toggle('active', !teacherPanel.classList.contains('hidden'));
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.teacher-dropdown-wrap')) {
-      teacherPanel.classList.add('hidden');
-      btnTeacherMenu.classList.remove('active');
-    }
-  });
-
-  document.getElementById('chkFillKey').addEventListener('change', (e) => {
-    if (e.target.checked) {
-      savedStudentAnswersBackup = JSON.parse(JSON.stringify(state.answers));
-      QUESTIONS.forEach((q) => {
-        state.answers[q.id] = { ...q.answer };
-      });
-      state.isChecked = true;
-      showToast('เติมเฉลยครูผู้สอนลงในช่องคำตอบแล้ว');
-    } else {
-      if (savedStudentAnswersBackup) {
-        state.answers = savedStudentAnswersBackup;
-        savedStudentAnswersBackup = null;
-      } else {
-        state.answers = initEmptyAnswers();
-      }
-      state.isChecked = false;
-      showToast('กลับสู่โหมดใบงานนักเรียน');
-    }
-    updateAllUI();
-  });
-
-  document.getElementById('chkShowKeySheet').addEventListener('change', (e) => {
-    const keySheet = document.getElementById('pageAnswerKey');
-    keySheet.classList.toggle('hidden', !e.target.checked);
-    syncPageNumbers();
-    if (e.target.checked) {
-      showToast('เพิ่มหน้าเฉลยสำหรับครู (หน้า 4) ท้ายใบงานแล้ว');
-      keySheet.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
-
   document.getElementById('btnSaveDraft')?.addEventListener('click', () => {
     saveState();
     updateDraftStatusUI(`บันทึกฉบับร่างแล้ว (${formatTimeTH(state.lastSavedAt)} น.)`);
@@ -895,9 +818,6 @@ function bindEvents() {
     if (hasAnyData && !window.confirm('ต้องการล้างชื่อและคำตอบทั้งหมดให้เป็นใบงานเปล่าใช่หรือไม่?')) {
       return;
     }
-
-    document.getElementById('chkFillKey').checked = false;
-    savedStudentAnswersBackup = null;
 
     state.studentName = '';
     state.studentRoom = '';

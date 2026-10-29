@@ -47,24 +47,6 @@
           <span id="btnCheckLabel">ตรวจคำตอบ</span>
         </button>
 
-        <div class="teacher-dropdown-wrap">
-          <button type="button" id="btnTeacherMenu" class="btn btn-outline" title="เครื่องมือสำหรับครูผู้สอน">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-            <span>สำหรับครู</span>
-          </button>
-          <div id="teacherPanel" class="teacher-popover hidden">
-            <div class="popover-title">โหมดครูผู้สอน</div>
-            <label class="toggle-row">
-              <input type="checkbox" id="chkFillKey" />
-              <span>เติมคำตอบเฉลยลงในช่องว่าง</span>
-            </label>
-            <label class="toggle-row">
-              <input type="checkbox" id="chkShowKeySheet" />
-              <span>แนบแผ่นเฉลยท้ายใบงาน (หน้า 4)</span>
-            </label>
-          </div>
-        </div>
-
         <button type="button" id="btnReset" class="btn btn-ghost" title="ล้างข้อมูลทั้งหมดเป็นใบงานเปล่า">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
           <span>ล้างคำตอบ</span>
@@ -188,29 +170,6 @@
         <span class="page-num" data-page="3">หน้า 3 / 3</span>
       </footer>
     </section>
-
-    <!-- ==================== PAGE 4: TEACHER ANSWER KEY (Optional) ==================== -->
-    <section class="a4-sheet hidden" id="pageAnswerKey">
-      <div class="ws-header key-header">
-        <div class="ws-header-left">
-          <div class="ws-code-tag key-tag">
-            <span class="code-main">เฉลย</span>
-            <span class="code-sub">LAB 01</span>
-          </div>
-          <div class="ws-title-group">
-            <div class="ws-course">ส่วนสำหรับครูผู้สอน (Teacher Answer Key)</div>
-            <h2 class="ws-title">เฉลยใบงานที่ 1 เรื่อง ระบบทางเทคโนโลยี (Technological System)</h2>
-          </div>
-        </div>
-      </div>
-
-      <div class="answer-key-grid" id="answerKeyContainer"></div>
-
-      <footer class="ws-footer">
-        <span>ส่วนสำหรับครูผู้สอน — เฉลยใบงาน LAB01 : ระบบทางเทคโนโลยี</span>
-        <span class="page-num" data-page="4">หน้า 4 / 4</span>
-      </footer>
-    </section>
   </main>
 
   <!-- Toast Notification -->
@@ -222,3 +181,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
